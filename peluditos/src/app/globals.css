@@ -1,12 +1,36 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f2e0d5;
+  --foreground: #400203;
+  --font-categoria: 'Handlee', sans-serif;
+  --font-categoria2: 'Rubik';
+}
+
+.title-name {
+  font-family: var(--font-categoria);
+  font-size: 1.8rem;
+  color: #400203;
+}
+
+.font-text {
+  font-family: var(--font-categoria2);
+  color: #400203;
+}
+
+.btn-style{
+  background-color: #b0deeb;
+  border-color:transparent;
+  box-shadow: 0px 2px 10px #576d74;
+  font-family: var(--font-categoria2);
+  font-weight: 300;
+  color: #400203;
+  margin: 4px;
+  text-align: center;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #400203;
+    --foreground: #f2e0d5;
   }
 }
 
@@ -17,13 +41,13 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--foreground) !important;
+  background: var(--background) !important;
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/*
 * {
   box-sizing: border-box;
   padding: 0;
@@ -33,7 +57,7 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
+}*/
 
 @media (prefers-color-scheme: dark) {
   html {
