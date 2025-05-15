@@ -10,9 +10,9 @@ export function Footer() {
         <>
 
 
-            <div className="footer bg-footer text-center py-4 mt-5">
+            <div className="footer bg-footer text-center py-4 mt-5" >
                 <div className="container">
-                    <div className="mb-3">
+                    <div >
                         <img
                             src="/images/logo-peluditos-8.png"
                             alt="Logo Peluditos"
