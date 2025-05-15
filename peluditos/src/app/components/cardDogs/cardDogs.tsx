@@ -1,9 +1,4 @@
 "use client";
-import { faBathtub, faShower } from '@fortawesome/free-solid-svg-icons';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart } from '@fortawesome/free-solid-svg-icons/faHeart';
-import { faScissors } from '@fortawesome/free-solid-svg-icons/faScissors';
 
 
 

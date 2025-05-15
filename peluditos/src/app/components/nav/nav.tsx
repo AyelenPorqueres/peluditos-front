@@ -11,9 +11,9 @@ export function Menu(){
         <Container fluid>
           <Navbar.Brand href="#home" className="mt-0">
             <img
-              src="/images/logo-peluditos.png"
+              src="/images/logo-peluditos-8.png"
               width="120"
-              height="100"
+              height="130"
               className="d-inline-block align-top "
               alt="React Bootstrap logo"
             />

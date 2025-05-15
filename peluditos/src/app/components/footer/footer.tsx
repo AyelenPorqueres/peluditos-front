@@ -1,8 +1,7 @@
 'use client';
-import { faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+
 import './footer.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+
 
 
 export function Footer() {
@@ -15,7 +14,7 @@ export function Footer() {
                 <div className="container">
                     <div className="mb-3">
                         <img
-                            src="/images/logo-peluditos.png"
+                            src="/images/logo-peluditos-8.png"
                             alt="Logo Peluditos"
                             className="footer-logo"
                         />
