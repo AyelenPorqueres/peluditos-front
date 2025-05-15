@@ -1,0 +1,26 @@
+.banner-text{
+    top: 10%; 
+    left: 5%;
+    z-index: 2;
+    height: 250px;
+    
+}
+
+.curva-superior {
+    position: absolute;
+    top: 67%; /* desktop */
+    left: 0;
+    width: 100vw;
+    height: 120px;
+    z-index: 2;
+    pointer-events: none;
+    
+  }
+  
+  @media (max-width: 768px) {
+    .curva-superior {
+      top: 90%; /* más abajo en mobile */
+      height: 60px; /* más bajita */
+    }
+  }
+  
