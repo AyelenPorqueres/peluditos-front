@@ -1,9 +1,14 @@
 'use client';
 
 import './bannerHome.css'
+import { useRouter } from 'next/navigation';
 
 
 export function BannerHome() {
+    const router = useRouter();
+    const handleClickClient = () => {
+      router.push('/client');
+    }
 
     return (
         <>
@@ -15,7 +20,7 @@ export function BannerHome() {
 
                     <div className=" p-5 col-md-4 col-lg-6 col-sm-12 banner-text d-flex flex-column justify-content-center align-items-start text-start" >
                         <p className="title-name mb-2 ">Un espacio de amor y profesionalismo dedicado a tu mejor amigo.</p>
-                        <button className="btn-style">Reserva tu turno</button>
+                        <button className="btn-style" onClick={handleClickClient}>Reserva tu turno</button>
                     </div>
 
                     <div className="p-0 col-lg-6 col-sm-12 position-relative" style={{ zIndex: 1, overflow:'hidden' }}>

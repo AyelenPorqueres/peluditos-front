@@ -46,7 +46,7 @@ export function InfoPoly() {
                                 ¡Espero conocerte pronto y ser parte del cuidado integral de tu peludito!
                             </p>
                             <div className="d-flex justify-content-center mt-3" >
-                                <button className="btn-style">Contactame</button>
+                               <a href='#contacto'><button className="btn-style">Contactame</button></a> 
                             </div>
                         </div>
 

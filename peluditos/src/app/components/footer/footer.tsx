@@ -10,7 +10,7 @@ export function Footer() {
         <>
 
 
-            <div className="footer bg-footer text-center py-4 mt-5" >
+            <div className="footer bg-footer text-center py-4 mt-5" id='contacto' >
                 <div className="container">
                     <div >
                         <img
