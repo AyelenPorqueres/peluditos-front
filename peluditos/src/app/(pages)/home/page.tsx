@@ -13,28 +13,28 @@ import { useEffect } from "react";
 
 
 export default function Home() {
-  const router = useRouter();
+  /*const router = useRouter();
   useEffect(() => {
     router.push("/loginPage");
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  
+  }, []);*/
+
   return (
     <>
-   
-    <header>
-      <div>
-        <Menu></Menu>
-        <BannerHome></BannerHome>
 
-      </div>
-    </header>
-    <main>
-     <CardService></CardService>
-     <InfoPoly></InfoPoly>
-     <CardDogs></CardDogs>
-    </main>
-    <Footer></Footer>
+      <header>
+        <div>
+          <Menu></Menu>
+          <BannerHome></BannerHome>
+
+        </div>
+      </header>
+      <main>
+        <CardService></CardService>
+        <InfoPoly></InfoPoly>
+        <CardDogs></CardDogs>
+      </main>
+      <Footer></Footer>
     </>
   );
 }

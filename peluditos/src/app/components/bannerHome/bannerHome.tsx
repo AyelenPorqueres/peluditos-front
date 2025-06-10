@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 export function BannerHome() {
     const router = useRouter();
     const handleClickClient = () => {
-      router.push('/client');
+      router.push('/loginPage');
     }
 
     return (
