@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import {  Rubik, Handlee } from "next/font/google";
+import { Rubik, Handlee } from "next/font/google";
 import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { UserContextProvider } from "./context/user.context";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -24,10 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        {children}
-      </body>
+    <html lang="es">
+      <UserContextProvider>
+        <body>
+          {children}
+        </body>
+      </UserContextProvider>
     </html>
   );
 }

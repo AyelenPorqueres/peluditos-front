@@ -1,8 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form"
 import "./formLogin.css"
+import { login } from "@/app/services/login";
+import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { UserContext } from "@/app/context/user.context";
 
 
-type Inputs = {
+interface Data  {
   dni: number;
 }
 
@@ -12,9 +16,24 @@ export default function FormLogin() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Data>();
+  const router = useRouter();
+  const {userData, setUserData } = useContext(UserContext);
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+
+
+  const onSubmit: SubmitHandler<Data> = async (data) => {
+    //Llama a el backend para generar el login
+    const resp = await login(data);
+
+    //Si hay un error de usuario no autorizado o usuario inexistente, muestra mensaje en pantalla
+    if (resp.length != 0) {
+      //Guardo la info del usuario en el contexto
+      setUserData(resp);
+    }
+    router.push('/client')
+
+  };
 
   return (
     <div className="container">
