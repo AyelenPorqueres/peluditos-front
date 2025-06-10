@@ -1,0 +1,102 @@
+
+  /* Caja del calendario */
+  .calendario-box {
+    background: #f7e2c9;
+    margin: 2rem;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Títulos */
+  .calendario-titulo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .calendario-subtitulo {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  /* Botón */
+  .btn-siguiente {
+    margin-top: 1.5rem;
+    background-color: #f2994a;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-siguiente:hover {
+    background-color: #e28536;
+  }
+  
+  /* Estilo personalizado del calendario */
+  .mi-calendario {
+    border: none;
+    font-size: 0.95rem;
+    background-color:#f7e2c9 ;
+  }
+  
+  .react-calendar {
+    width: 100%;
+    border: none;
+  }
+  
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .react-calendar__navigation button {
+    background: none;
+    color: #f2994a;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+  }
+  
+  .react-calendar__navigation button:hover {
+    color: #e28536;
+  }
+  
+  .react-calendar__tile {
+    border-radius: 8px;
+    padding: 0.75rem 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .react-calendar__tile:enabled:hover {
+    background-color: #e28536;
+  }
+  
+  .react-calendar__tile--now {
+    background: #f2994a33;
+    border-radius: 8px;
+  }
+  
+  .react-calendar__tile--active {
+    background: #f2994a !important;
+    color: white;
+    border-radius: 8px;
+  }
+
+  .mi-calendario button[disabled] {
+    background-color: #f7e2c9;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 1;
+  }
