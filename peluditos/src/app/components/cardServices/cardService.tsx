@@ -17,7 +17,7 @@ export function CardService() {
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-sm-12 col-md-6 col-lg-4 mb-4 d-flex justify-content-center">
-            <div className="card shadow" style={{  width: '340px', height: '110px', background: '#CD9F85'}}>
+            <div className="card shadow" style={{  width: '340px', height: '110px', background: '#f2e0d5'}}>
               <div className="card-body d-flex justify-content-center align-items-center">
                 <h5 className="card-title text-center" style={{ color: '#400203'}} >
                 

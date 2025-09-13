@@ -9,3 +9,8 @@ input[type=number] { -moz-appearance:textfield; }
 .btn-dni {
     opacity: .8;
 }
+
+.form-control{
+    background-color: #f0f0f0 !important;
+
+}

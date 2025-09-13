@@ -1,12 +1,13 @@
 :root {
-  --background: #f2e0d5;
+  --background: #fafafa;
   --foreground: #400203;
   --font-categoria: 'Handlee', sans-serif;
   --font-categoria2: 'Rubik';
 }
 
 .title-name {
-  font-family: var(--font-categoria);
+  font-family: var(--font-categoria2);
+  font-weight: 400;
   font-size: 1.8rem;
   color: #400203;
 }
@@ -18,18 +19,17 @@
 
 
 .btn-style{
-  background-color: #b0deeb;
-  border-color:transparent;
-  box-shadow: 0px 2px 10px #576d74;
-  font-family: var(--font-categoria2);
+  background-color: #f2994a  !important; /*#b0deeb*/
+  border-color:transparent !important;
+    box-shadow: 2px 2px 10px #b3c2c8  !important;
+  font-family: var(--font-categoria2) !important;
   font-weight: 300;
-  color: #400203;
+  color: white;
   margin: 4px;
+  padding: 6px;
   text-align: center;
   border-radius: 7px;
-  height: 50px;
-  width: auto;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 @media (prefers-color-scheme: dark) {

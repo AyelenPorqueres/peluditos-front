@@ -1,11 +1,11 @@
 
   /* Caja del calendario */
   .calendario-box {
-    background: #f7e2c9;
+    background: #f2e0d5;
     margin: 2rem;
     padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);*/
     text-align: center;
     width: 100%;
     max-width: 400px;
@@ -45,7 +45,7 @@
   .mi-calendario {
     border: none;
     font-size: 0.95rem;
-    background-color:#f7e2c9 ;
+    background-color:#f2e0d5 ;
   }
   
   .react-calendar {
@@ -95,7 +95,7 @@
   }
 
   .mi-calendario button[disabled] {
-    background-color: #f7e2c9;
+    background-color: #f2e0d5;
     color: #999;
     cursor: not-allowed;
     opacity: 1;

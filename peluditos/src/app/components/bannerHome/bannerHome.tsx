@@ -7,48 +7,41 @@ import { useRouter } from 'next/navigation';
 export function BannerHome() {
     const router = useRouter();
     const handleClickClient = () => {
-      router.push('/loginPage');
+        router.push('/client');
     }
 
     return (
         <>
-
-          
-
-            <div className="container-fluid p-0 position-relative" style={{ overflow: 'hidden' }}>
-                <div className="row m-0">
-
-                    <div className=" p-5 col-md-4 col-lg-6 col-sm-12 banner-text d-flex flex-column justify-content-center align-items-start text-start" >
-                        <p className="title-name mb-2 ">Un espacio de amor y profesionalismo dedicado a tu mejor amigo.</p>
-                        <button className="btn-style" onClick={handleClickClient}>Reserva tu turno</button>
+            {/*<div className="banner" >
+                <div className="texto-banner d-flex align-items-center">
+                    <div className="col-1"></div>
+                    <div className="col-md-8 col-lg-8 col-sm-4 col-xs-4 d-flex flex-column justify-content-center align-items-start text-start" >
+                        <p className="title-name title-banner p-2 m-2 col-4 ">Un espacio de amor y profesionalismo dedicado a tu mejor amigo</p>
+                        <button className="btn-style p-2 m-2" onClick={handleClickClient}>Reserva tu turno</button>
                     </div>
 
-                    <div className="p-0 col-lg-6 col-sm-12 position-relative" style={{ zIndex: 1, overflow:'hidden' }}>
-                        <img
-                            src="/images/banner.png"
-                            alt="Perro en baño de burbujas"
-                            className="w-100 img-fluid"
-                            style={{ display: 'block' }}
-                        />
+                 
+                </div>
+            </div>*/}
+            <div className="container-fluid" >
+                <div className="row d-flex align-items-center">
+                    <div className='col-4 p-0'>
+                        <img src="/images/banner1.png" alt="Perro saludando" className="img-banner img-fluid" />
+                    </div>
+                    <div className='col-4 p-0'>
+                        <img src="/images/banner2.png" alt="Perro saludando" className="img-banner img-fluid" />
+                    </div>
+                    <div className='col-4 p-0'>
+                        <img src="/images/banner3.png" alt="Perro saludando" className="img-banner img-fluid" />
                     </div>
                 </div>
-
-               
-                <div className='curva-superior'>
-                    <svg viewBox="0 0 1440 190" className="w-100 h-100" preserveAspectRatio="none">
-                        <path
-                            fill="#C27043"
-                            d="M0,0 C360,110 1080,60 1440,80 L1440,180 L0,210 Z"
-                        />
-                        <path
-                            fill="#f3ded0"
-                            d="M0,110 C360,180 1080,90 1440,120 L1440,240 L0,190 Z"
-                        />
-                    </svg>
+                <div className='row d-flex align-items-center text-center'>
+                    <div className="col-12 d-flex flex-column justify-content-center align-items-center" >
+                        <p className="title-name title-banner p-2 m-2 col-8 ">Un espacio de amor y profesionalismo dedicado a tu mejor amigo</p>
+                        <button className="btn-style p-2 m-2 btn-reserva" onClick={handleClickClient}>Reserva tu turno</button>
+                    </div>
                 </div>
             </div>
-
-
         </>
     )
 }

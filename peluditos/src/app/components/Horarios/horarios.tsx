@@ -6,7 +6,7 @@ import './horarios.css'
 
 
 export default function Horarios(props: any) {
-    const { setMostrarCalendario, setMostrarHorarios, setMostrarMascotas }: { setMostrarCalendario: Function, setMostrarHorarios: Function , setMostrarMascotas: Function} = props;
+    const { setMostrarCalendario, setMostrarHorarios, setMostrarUsuario }: { setMostrarCalendario: Function, setMostrarHorarios: Function , setMostrarUsuario: Function} = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
     const horariosDisp = ['10:00', '14:00', '16:00'];
 
@@ -15,7 +15,7 @@ export default function Horarios(props: any) {
             hora: horario,
         })
         setMostrarHorarios(false);
-        setMostrarMascotas(true);
+        setMostrarUsuario(true);
     }
 
     const irAtras = () => {

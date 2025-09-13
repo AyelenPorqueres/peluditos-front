@@ -1,6 +1,6 @@
 'use client'
 import "./page.css";
-import FormLogin from "@/app/components/FormLogin/FormLogin"
+import FormLogin from "@/app/components/Usuario/usuario";
 
 export default function LoginPage() {
 

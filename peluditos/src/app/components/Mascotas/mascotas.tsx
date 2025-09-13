@@ -2,26 +2,39 @@
 import { useContext, useEffect, useState } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
 import './mascotas.css'
+import { Button, Modal } from 'react-bootstrap';
+import AgregarMascota from '../AgregarMascota/agregarMascota';
 
 
 
 export default function Mascotas(props: any) {
-    const { setMostrarHorarios, setMostrarMascotas }: { setMostrarHorarios: Function, setMostrarMascotas: Function } = props;
+    const { setMostrarUsuario, setMostrarMascotas, setMostrarPeluqueras }: { setMostrarUsuario: Function, setMostrarMascotas: Function, setMostrarPeluqueras: Function } = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
     const mascotas = ['Mora', 'Pupy', 'Cata'];
+    const [show, setShow] = useState(false);
 
-    const guardarHorario = (mascota: string) => {
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+    const guardarMascota = (mascota: string) => {
         setTurnoData({
             ...turnoData,
             mascota: mascota,
         })
-        setMostrarHorarios(false);
+        setMostrarMascotas(false);
+        setMostrarPeluqueras(true);
     }
 
     const irAtras = () => {
         setMostrarMascotas(false);
-        setMostrarHorarios(true);
+        setMostrarUsuario(true);
     }
+
+    //por ahora lo manejo con el modal
+   /* const agregarMascota = () => {
+        setMostrarMascotas(false);
+        setMostrarAgregarMascota(true);
+    }*/
 
     return (
         <>
@@ -38,18 +51,21 @@ export default function Mascotas(props: any) {
                     return (
                         <button key={index}
                             className="btn-style rounded my-2 col-12 mx-auto"
-                            onClick={() => guardarHorario(mascota)}
+                            onClick={() => guardarMascota(mascota)}
                         >
                             {mascota}
                         </button>
                     )
                 })}
-                <button
+                <button 
                     className="btn-style rounded my-2 col-12 mx-auto"
+                    onClick={handleShow}
                 >
                     Agregar Mascota
                 </button>
+                <AgregarMascota show={show} handleClose={handleClose}></AgregarMascota>
             </div>
+
         </>
     );
 }

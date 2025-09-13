@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { BannerHome } from "@/app/components/bannerHome/bannerHome";
@@ -26,7 +24,6 @@ export default function Home() {
         <div>
           <Menu></Menu>
           <BannerHome></BannerHome>
-
         </div>
       </header>
       <main>

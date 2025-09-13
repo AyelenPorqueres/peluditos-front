@@ -7,19 +7,14 @@ import Navbar from 'react-bootstrap/Navbar';
 export function Menu(){
  return(
   <>
-     <Navbar className="py-0" >
-        <Container fluid>
-          <Navbar.Brand href="#home" className="mt-0">
+     <div className="d-flex align-items-center justify-content-center m-3" >
             <img
-              src="/images/logo-peluditos-8.png"
-              width="120"
-              height="130"
-              className="d-inline-block align-top "
+              src="/images/logo-peluditos.png"
+              width="300"
+              height="90"
               alt="React Bootstrap logo"
             />
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
+      </div>
   
   
   
