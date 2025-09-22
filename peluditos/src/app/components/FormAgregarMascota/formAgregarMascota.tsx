@@ -3,38 +3,100 @@ import './formAgregarMascota.css'
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { UserContext } from '@/app/context/user.context';
+import { useContext } from 'react';
+import { createMascota } from '@/app/services/client';
+import Swal from 'sweetalert2';
 
 
 
 const schema = yup.object().shape({
     nombreMascota: yup.string().required('El nombre de la mascota es requerido'),
     raza: yup.string().required('La raza es requerida'),
-    edad: yup.number().required('La edad es requerida').positive('La edad debe ser positiva'),
+    edad: yup.string()
+        .required('La edad es requerida')
+        .matches(/^\d+$/, 'La edad debe ser un número')
+        .test('positive', 'La edad debe ser positiva', value =>
+            value ? parseInt(value) > 0 : true
+        ),
     castrado: yup.boolean().required('Debe indicar si está castrado'),
-    vacunasAlDia: yup.boolean().required('Debe indicar si las vacunas están al día'),
+    vacuna_rabia: yup.string().required('La fecha de la vacuna de rabia es requerida').matches(/^(0[1-9]|1[0-2])\/\d{4}$/, 'Formato inválido, use MM/AAAA').test('no-futura', 'La fecha no puede ser futura', (value) => {
+        if (!value) return true;
+        const [mes, anio] = value.split('/').map(Number);
+        const fecha = new Date(anio, mes - 1);
+        return fecha <= new Date();
+    }),
+    vacuna_sextuple: yup.string().required('La fecha de la vacuna sextuple es requerida').matches(/^(0[1-9]|1[0-2])\/\d{4}$/, 'Formato inválido, use MM/AAAA').test('no-futura', 'La fecha no puede ser futura', (value) => {
+        if (!value) return true;
+        const [mes, anio] = value.split('/').map(Number);
+        const fecha = new Date(anio, mes - 1);
+        return fecha <= new Date();
+    }),
     desparasitado: yup.boolean().required('Debe indicar si está desparasitado'),
+    veterinario: yup.string().required('El nombre del veterinario es requerido'),
+    tel_veterinario: yup.string().required('El teléfono del veterinario es requerido').matches(/^\d+$/, 'El teléfono debe ser un número'),
+    direccion_veterinario: yup.string().optional(),
     observaciones: yup.string().optional(),
 });
 
 interface FormData {
     nombreMascota: string;
     raza: string;
-    edad: number;
+    edad: string;
     castrado: boolean;
-    vacunasAlDia: boolean;
     desparasitado: boolean;
+    vacuna_rabia: string;
+    vacuna_sextuple: string;
+    veterinario: string;
+    tel_veterinario: number;
+    direccion_veterinario?: string;
     observaciones?: string;
 }
 
 export default function FormAgregarMascota(props: any) {
-
-
+    const { handleClose}: { handleClose: Function } = props;
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: yupResolver(schema) as any
     });
+    const { userData } = useContext(UserContext);
+    const razas = ['Labrador', 'Bulldog', 'Beagle', 'Poodle', 'Chihuahua'];
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
+
+    const cargarRazas = async () => {
+        // Lógica para cargar las razas desde una API o base de datos
+    }
+
+    const onSubmit = async (data: FormData) => {
+        const mascota = {
+            nombre: data.nombreMascota,
+            raza: data.raza,
+            edad: data.edad,
+            castrado: data.castrado,
+            desparasitado: data.desparasitado,
+            antirabica: data.vacuna_rabia,
+            sextuple: data.vacuna_sextuple,
+            veterinario: data.veterinario,
+            tel_veterinario: data.tel_veterinario,
+            direccion_veterinario: data.direccion_veterinario,
+            observaciones: data.observaciones,
+            duenio: userData?.dni
+        };
+        const resp = await createMascota(mascota);
+
+        if (resp == 500) {
+            Swal.fire({
+                title: `Algo no salio bien.`,
+                text: "Intenta nuevamente.",
+                icon: "error"
+            });
+        } else {
+            Swal.fire({
+                title: `${mascota.nombre} se agrego correctamente!`,
+                text: "Ya podes reservarle un turno!",
+                icon: "success"
+            });
+            handleClose();
+        }
     };
 
     return (
@@ -52,13 +114,18 @@ export default function FormAgregarMascota(props: any) {
 
                 <div className='row mb-2'>
                     <div className="col">
-                        <label>Raza</label>
-                        <input
-                            type="text"
+                        <label>Raza (o parecido a:)</label>
+                        <select
                             className={`form-control ${errors.raza ? 'is-invalid' : ''}`}
                             {...register('raza')}
-                        />
-                        {errors.raza && <div className="invalid-feedback">{errors.raza.message}</div>}
+                            onClick={cargarRazas}
+                            defaultValue=""
+                        >
+                            <option value="" disabled>Seleccione una raza</option>
+                            {razas.map((raza: string) => (
+                                <option key={raza} value={raza}>{raza}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="col">
@@ -71,18 +138,28 @@ export default function FormAgregarMascota(props: any) {
                         {errors.edad && <div className="invalid-feedback">{errors.edad.message}</div>}
                     </div>
                 </div>
+                <div className='row mb-2'>
 
-                <div className='row mb-2 ms-1'>
-                    <div className="form-check col">
+                    <div className=" col">
+                        <label className="form-check-label">Vacuna de la rabia</label>
                         <input
-                            type="checkbox"
-                            className="form-check-input"
-                            {...register('vacunasAlDia')}
+                            type="text" placeholder="MM/AAAA"
+                            className={`form-control ${errors.vacuna_rabia ? 'is-invalid' : ''}`}
+                            {...register('vacuna_rabia')}
                         />
-                        <label className="form-check-label">Vacunas al día</label>
-                        {errors.vacunasAlDia && <div className="text-danger">{errors.vacunasAlDia.message}</div>}
+                        {errors.vacuna_rabia && <div className="text-danger">{errors.vacuna_rabia.message}</div>}
                     </div>
-
+                    <div className=" col">
+                        <label className="form-check-label">Vacuna sextuple</label>
+                        <input
+                            type="text" placeholder="MM/AAAA"
+                            className={`form-control ${errors.vacuna_sextuple ? 'is-invalid' : ''}`}
+                            {...register('vacuna_sextuple')}
+                        />
+                        {errors.vacuna_sextuple && <div className="text-danger">{errors.vacuna_sextuple.message}</div>}
+                    </div>
+                </div>
+                <div className='row mb-2 ms-1'>
                     <div className="form-check col">
                         <input
                             type="checkbox"
@@ -104,10 +181,41 @@ export default function FormAgregarMascota(props: any) {
                     </div>
                 </div>
                 <div className="form-group mb-2">
+                    <label>Veterinario</label>
+                    <input
+                        type="text"
+                        className={`form-control ${errors.veterinario ? 'is-invalid' : ''}`}
+                        {...register('veterinario')}
+                    />
+                    {errors.veterinario && <div className="invalid-feedback">{errors.veterinario.message}</div>}
+                </div>
+
+                <div className='row mb-2'>
+                    <div className="col">
+                        <label>Tel. Veterinario</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.tel_veterinario ? 'is-invalid' : ''}`}
+                            {...register('tel_veterinario')}
+                        />
+                        {errors.tel_veterinario && <div className="invalid-feedback">{errors.tel_veterinario.message}</div>}
+                    </div>
+                    <div className="col">
+                        <label>Dirección Veterinario</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.direccion_veterinario ? 'is-invalid' : ''}`}
+                            {...register('direccion_veterinario')}
+                        />
+                        {errors.direccion_veterinario && <div className="invalid-feedback">{errors.direccion_veterinario.message}</div>}
+                    </div>
+                </div>
+                <div className="form-group mb-2">
                     <label>Observaciones</label>
                     <textarea
                         className={`form-control ${errors.observaciones ? 'is-invalid' : ''}`}
                         {...register('observaciones')}
+                        placeholder='Escribe aquí cualquier detalle adicional que consideres importante del comportamiento o salud de tu mascota (Miedos, fobias, alergias, cuidados especiales, etc.)'
                         rows={3}
                     />
                     {errors.observaciones && <div className="invalid-feedback">{errors.observaciones.message}</div>}

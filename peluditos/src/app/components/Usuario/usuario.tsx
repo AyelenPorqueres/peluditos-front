@@ -18,26 +18,15 @@ export default function Usuario(props: any) {
   const {
     register,
     handleSubmit,
-    watch,
+    setError,
     formState: { errors },
   } = useForm<Data>();
 
 
   const router = useRouter();
   const { userData, setUserData } = useContext(UserContext);
-  const { turnoData, setTurnoData } = useContext(TurnoContext);
   const [mostrarFormLogin, setMostrarFormLogin] = useState(true);
   const [mostrarFormRegistrarse, setMostrarFormRegistrarse] = useState(false);
-
-
-  /*const guardarHorario = (horario: string) => {
-    setTurnoData({
-      ...turnoData,
-      hora: horario,
-    })
-    setMostrarHorarios(false);
-    setMostrarMascotas(true);
-  }*/
 
   const irAtras = () => {
     setMostrarUsuario(false);
@@ -48,12 +37,18 @@ export default function Usuario(props: any) {
     //Llama a el backend para generar el login
     const resp = await login(data);
 
-    if (resp.length != 0) {
-      //Guardo la info del usuario en el contexto
+    //Si hay un error de usuario no autorizado o usuario inexistente, muestra mensaje en pantalla
+    if (resp.length == 0) {
+      setError("dni", {
+        type: "manual",
+        message: 'No existe un usuario resgistrado con ese DNI. Registrate en el link de abajo para continuar.',
+      })
+    } else {
+      //Si el login es exitoso guardo la info del usuario en el contexto
       setUserData(resp);
+      setMostrarUsuario(false);
+      setMostrarMascotas(true);
     }
-    setMostrarUsuario(false);
-    setMostrarMascotas(true);
   };
 
   const handleRegistrarse = () => {

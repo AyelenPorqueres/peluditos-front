@@ -40,10 +40,6 @@ export default function AgregarMascota(props: any) {
         setMostrarRequisitos(true);
     }
 
-    const guardarMascota = () => {
-        // Lógica para guardar la mascota
-    };
-
     return (
         <>
             <Modal show={show} onHide={() => cerrar()}>
@@ -74,7 +70,7 @@ export default function AgregarMascota(props: any) {
                             </div>
                             <div className='d-flex flex-row align-items-start'>
                                 <FontAwesomeIcon className="m-1" icon={faPaw} size="lg" style={{ color: "#400203", }} />
-                                <p className='font-text m-1'>Tratamiento antipulgas: pipeta o pastilla aplicar 5 días antes del baño.</p>
+                                <p className='font-text m-1'>SI se encuentra con tratamiento antipulgas o garrapatas: pipeta o pastilla aplicar 5 días antes del baño.</p>
                             </div>
                             <div className='d-flex flex-row align-items-start'>
                                 <FontAwesomeIcon className="m-1" icon={faPaw} size="lg" style={{ color: "#400203", }} />
@@ -82,9 +78,8 @@ export default function AgregarMascota(props: any) {
                             </div>
                         </div>}
                     {mostrarForm &&
-                        <FormAgregarMascota />
+                        <FormAgregarMascota handleClose={handleClose} />
                     }
-
                 </Modal.Body>
                 {mostrarRequisitos &&
                     <Modal.Footer>

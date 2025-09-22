@@ -2,17 +2,27 @@
 import { useContext, useEffect, useState } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
 import './horarios.css'
+import { getTurnosDisponibles } from '@/app/services/client';
+import Peluqueras from '../Peluqueras/peluqueras';
 
 
 
 export default function Horarios(props: any) {
-    const { setMostrarCalendario, setMostrarHorarios, setMostrarUsuario }: { setMostrarCalendario: Function, setMostrarHorarios: Function , setMostrarUsuario: Function} = props;
+    const { setMostrarCalendario, setMostrarHorarios, setMostrarUsuario }: { setMostrarCalendario: Function, setMostrarHorarios: Function, setMostrarUsuario: Function } = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
-    const horariosDisp = ['10:00', '14:00', '16:00'];
+    const [horariosDisp, setHorariosDisp] = useState<any[]>([]);
 
-    const guardarHorario = (horario: string) => {
-        setTurnoData({...turnoData,
-            hora: horario,
+    const cargarHorarios = async () => {
+        const horariosDisp = await getTurnosDisponibles({ day: turnoData?.dia.toISOString().split('T')[0] || '' }) || [];
+        setHorariosDisp(horariosDisp);
+    }
+
+    const guardarHorario = (horario: any) => {
+        setTurnoData({
+            ...turnoData,
+            hora: horario.horario,
+            peluquera: horario.peluquera.nombre,
+            id_peluquera: horario.peluquera.id
         })
         setMostrarHorarios(false);
         setMostrarUsuario(true);
@@ -22,6 +32,11 @@ export default function Horarios(props: any) {
         setMostrarHorarios(false);
         setMostrarCalendario(true);
     }
+
+    useEffect(() => {
+        cargarHorarios();
+    }, []);
+
 
     return (
         <>
@@ -34,13 +49,13 @@ export default function Horarios(props: any) {
                     {turnoData?.dia.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^\w/, c => c.toUpperCase())}
                 </p>
 
-                {horariosDisp.map((horario: string, index: number) => {
+                {horariosDisp.map((horario: any, index: number) => {
                     return (
                         <button key={index}
                             className="btn-style rounded my-2 col-12 mx-auto"
                             onClick={() => guardarHorario(horario)}
                         >
-                            {horario}
+                            {horario.horario} con {horario.peluquera.nombre}
                         </button>
                     )
                 })}

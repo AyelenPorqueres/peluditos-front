@@ -1,4 +1,4 @@
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, set } from "react-hook-form"
 import "./formRegistrarse.css"
 import { login } from "@/app/services/login";
 import { useRouter } from "next/navigation";
@@ -6,6 +6,9 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/app/context/user.context";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createClient } from "@/app/services/client";
+import { IUser } from "@/app/model/IUser";
+import Swal from "sweetalert2";
 
 
 
@@ -24,21 +27,47 @@ interface FormData {
   nombreApellido: string;
   dni: number;
   mail: string;
-  telefono: string;
+  telefono: number;
 }
 
-export default function FormRegistrarse(props:any) {
-  const { setMostrarFormLogin, setMostrarFormRegistrarse, setMostrarMascotas,setMostrarUsuario }: { setMostrarFormLogin: Function, setMostrarFormRegistrarse: Function, setMostrarMascotas: Function, setMostrarUsuario: Function } = props;
+export default function FormRegistrarse(props: any) {
+  const { setMostrarFormLogin, setMostrarFormRegistrarse, setMostrarMascotas, setMostrarUsuario }: { setMostrarFormLogin: Function, setMostrarFormRegistrarse: Function, setMostrarMascotas: Function, setMostrarUsuario: Function } = props;
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(schema) as any
   });
 
   const { userData, setUserData } = useContext(UserContext);
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    setMostrarUsuario(false);
-    setMostrarMascotas(true);
+  const onSubmit = async (data: FormData) => {
+    const cliente: IUser = {
+      nombre: data.nombreApellido,
+      dni: data.dni,
+      mail: data.mail,
+      telefono: data.telefono
+    };
+    const resp = await createClient(cliente);
+
+    if (resp == 409) {
+      Swal.fire({
+        title: `Hola ${cliente.nombre}!`,
+        text: "Tu DNI ya se encuentra registrado. Por favor, inicia sesión para continuar.",
+        icon: "error"
+      });
+      setUserData(null);
+      setMostrarFormRegistrarse(false);
+      setMostrarFormLogin(true);
+    } else {
+      Swal.fire({
+        title: `Hola ${cliente.nombre}!`,
+        text: "Ya podes empezar a disfrutar de nuestros servicios!",
+        icon: "success"
+      });
+      setUserData(cliente);
+      setMostrarUsuario(false);
+      setMostrarFormRegistrarse(false);
+      setMostrarFormLogin(true);
+      setMostrarMascotas(true);
+    }
   };
 
   const irAtras = () => {

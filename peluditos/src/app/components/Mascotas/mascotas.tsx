@@ -2,24 +2,32 @@
 import { useContext, useEffect, useState } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
 import './mascotas.css'
-import { Button, Modal } from 'react-bootstrap';
 import AgregarMascota from '../AgregarMascota/agregarMascota';
+import { getMascotas } from '@/app/services/client';
+import { UserContext } from '@/app/context/user.context';
 
 
 
 export default function Mascotas(props: any) {
     const { setMostrarUsuario, setMostrarMascotas, setMostrarPeluqueras }: { setMostrarUsuario: Function, setMostrarMascotas: Function, setMostrarPeluqueras: Function } = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
-    const mascotas = ['Mora', 'Pupy', 'Cata'];
+    const {userData} = useContext(UserContext);
+    const [mascotas, setMascotas] = useState<string[]>([]);
     const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-    const guardarMascota = (mascota: string) => {
+    const cargarMascotas = async () => {
+        const mascotas = await getMascotas(userData?.dni || 0) || [];
+        setMascotas(mascotas);
+    }
+
+    const guardarMascota = (mascota: any) => {
         setTurnoData({
             ...turnoData,
-            mascota: mascota,
+            mascota: mascota.nombre,
+            id_mascota: mascota.id_mascota
         })
         setMostrarMascotas(false);
         setMostrarPeluqueras(true);
@@ -30,11 +38,13 @@ export default function Mascotas(props: any) {
         setMostrarUsuario(true);
     }
 
-    //por ahora lo manejo con el modal
-   /* const agregarMascota = () => {
-        setMostrarMascotas(false);
-        setMostrarAgregarMascota(true);
-    }*/
+    useEffect(() => {
+        cargarMascotas();
+    }, []);
+
+    useEffect(() => {
+        cargarMascotas();
+    }, [show]);
 
     return (
         <>
@@ -44,20 +54,20 @@ export default function Mascotas(props: any) {
             <div className="d-flex flex-column align-items-center justify-content-center mb-3">
                 <p className="font-text h5 text-center">Mascota</p>
                 <p className="font-text text-center">
-                    {turnoData?.dia.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^\w/, c => c.toUpperCase()) + ' ' + turnoData!.hora}
+                    {turnoData?.dia.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^\w/, c => c.toUpperCase()) + ' ' + turnoData!.hora + ' con ' + turnoData!.peluquera}
                 </p>
 
-                {mascotas.map((mascota: string, index: number) => {
+                {mascotas.map((mascota: any, index: number) => {
                     return (
                         <button key={index}
                             className="btn-style rounded my-2 col-12 mx-auto"
                             onClick={() => guardarMascota(mascota)}
                         >
-                            {mascota}
+                            {mascota.nombre}
                         </button>
                     )
                 })}
-                <button 
+                <button
                     className="btn-style rounded my-2 col-12 mx-auto"
                     onClick={handleShow}
                 >
