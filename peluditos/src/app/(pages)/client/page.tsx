@@ -50,17 +50,17 @@ export default function ClientPage() {
                                 <Mascotas
                                     setMostrarUsuario={setMostrarUsuario}
                                     setMostrarMascotas={setMostrarMascotas}
-                                    setMostrarPeluqueras={setMostrarPeluqueras}
+                                    setMostrarConfirmarTurno={setMostrarConfirmarTurno}
                                 />}
-                            {mostrarPeluqueras &&
+                            {/*mostrarPeluqueras &&
                                 <Peluqueras
                                     setMostrarMascotas={setMostrarMascotas}
                                     setMostrarPeluqueras={setMostrarPeluqueras}
                                     setMostrarConfirmarTurno={setMostrarConfirmarTurno}
-                                />}
+                                />*/}
                             {mostrarConfirmarTurno &&
                                 <ConfirmarTurno
-                                    setMostrarPeluqueras={setMostrarPeluqueras}
+                                    setMostrarMascotas={setMostrarMascotas}
                                     setMostrarConfirmarTurno={setMostrarConfirmarTurno}
                                 />}
                         </div>

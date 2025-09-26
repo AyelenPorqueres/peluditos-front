@@ -9,7 +9,7 @@ import { UserContext } from '@/app/context/user.context';
 
 
 export default function Mascotas(props: any) {
-    const { setMostrarUsuario, setMostrarMascotas, setMostrarPeluqueras }: { setMostrarUsuario: Function, setMostrarMascotas: Function, setMostrarPeluqueras: Function } = props;
+    const { setMostrarUsuario, setMostrarMascotas, setMostrarConfirmarTurno }: { setMostrarUsuario: Function, setMostrarMascotas: Function, setMostrarConfirmarTurno: Function } = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
     const {userData} = useContext(UserContext);
     const [mascotas, setMascotas] = useState<string[]>([]);
@@ -30,7 +30,7 @@ export default function Mascotas(props: any) {
             id_mascota: mascota.id_mascota
         })
         setMostrarMascotas(false);
-        setMostrarPeluqueras(true);
+        setMostrarConfirmarTurno(true);
     }
 
     const irAtras = () => {

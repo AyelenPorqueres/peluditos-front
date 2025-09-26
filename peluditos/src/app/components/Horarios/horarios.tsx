@@ -2,10 +2,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
 import './horarios.css'
-import { getTurnosDisponibles } from '@/app/services/client';
-import Peluqueras from '../Peluqueras/peluqueras';
-
-
+import { getTurnosDisponibles } from '@/app/services/admin';
 
 export default function Horarios(props: any) {
     const { setMostrarCalendario, setMostrarHorarios, setMostrarUsuario }: { setMostrarCalendario: Function, setMostrarHorarios: Function, setMostrarUsuario: Function } = props;
@@ -22,7 +19,7 @@ export default function Horarios(props: any) {
             ...turnoData,
             hora: horario.horario,
             peluquera: horario.peluquera.nombre,
-            id_peluquera: horario.peluquera.id
+            id_peluquera: horario.peluquera.id_peluquera
         })
         setMostrarHorarios(false);
         setMostrarUsuario(true);

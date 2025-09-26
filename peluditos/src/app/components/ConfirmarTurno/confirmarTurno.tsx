@@ -1,20 +1,46 @@
 import { useContext } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
+import { createTurno } from '@/app/services/client';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 
 
 export default function ConfirmarTurno(props: any) {
-    const  {setMostrarPeluqueras, setMostrarConfirmarTurno }: {setMostrarPeluqueras: Function, setMostrarConfirmarTurno: Function } = props;
+    const { setMostrarMascotas, setMostrarConfirmarTurno }: { setMostrarMascotas: Function, setMostrarConfirmarTurno: Function } = props;
     const { turnoData, setTurnoData } = useContext(TurnoContext);
+    const router = useRouter();
 
+    const guardarTurno = async () => {
+        const turno = {
+            dia: turnoData?.dia.toISOString().split('T')[0],
+            hora: turnoData?.hora,
+            mascota: turnoData?.id_mascota,
+            peluquera: turnoData?.id_peluquera
+        };
+        const resp = await createTurno(turno);
 
-    const guardarTurno= () => {
-    
+        if (resp == 500) {
+            Swal.fire({
+                title: `Algo no salio bien.`,
+                text: "Intenta nuevamente.",
+                icon: "error"
+            });
+        } else {
+            Swal.fire({
+                title: `Tu turno se agendó correctamente!`,
+                text: "Recibirás un mensaje de confirmación.",
+                icon: "success"
+            }).then(() => {
+                setTurnoData(null);
+                router.push('/home');
+            });
+        }
     }
 
     const irAtras = () => {
         setMostrarConfirmarTurno(false);
-        setMostrarPeluqueras(true);
+        setMostrarMascotas(true);
     }
 
     return (
@@ -25,17 +51,24 @@ export default function ConfirmarTurno(props: any) {
             <div className="d-flex flex-column align-items-center justify-content-center mb-3">
                 <p className="font-text h5 text-center">Confirmar Turno</p>
                 <p className="font-text text-center">
-                    {turnoData?.dia.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^\w/, c => c.toUpperCase()) + ' ' + turnoData!.hora + ' - ' + turnoData?.mascota + ' - ' + turnoData?.peluquera}
+                    {`Dia: ${turnoData?.dia.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^\w/, c => c.toUpperCase())}`}
                 </p>
-
-               
-                <button 
+                <p className="font-text text-center">
+                    {`Hora: ${turnoData?.hora}`}
+                </p>
+                <p className="font-text text-center">
+                    {'Mascota: ' + turnoData?.mascota}
+                </p>
+                <p className="font-text text-center">
+                    {'Peluquero/a: ' + turnoData?.peluquera}
+                </p>
+                <button
                     className="btn-style rounded my-2 col-12 mx-auto"
                     onClick={guardarTurno}
                 >
                     Confirmar turno
                 </button>
-                
+
             </div>
 
         </>

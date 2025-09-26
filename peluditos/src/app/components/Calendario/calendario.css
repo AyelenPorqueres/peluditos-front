@@ -87,12 +87,7 @@
     background: #f2994a33;
     border-radius: 8px;
   }
-  
-  .react-calendar__tile--active {
-    background: #f2994a !important;
-    color: white;
-    border-radius: 8px;
-  }
+
 
   .mi-calendario button[disabled] {
     background-color: #f2e0d5;
@@ -100,3 +95,42 @@
     cursor: not-allowed;
     opacity: 1;
   }
+
+  .dia-disponible {
+    background-color: rgba(205, 159, 133, 0.3) !important; /* Verde menta con transparencia */
+    color: #400203 !important;
+    font-weight: bold !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: auto !important;
+    width: 90% !important;
+    position: relative !important;
+}
+
+.dia-disponible:hover {
+    background-color: #cd9f85 !important;
+}
+
+.react-calendar__tile:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+}
+
+/* Estilo para el día seleccionado */
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+    background-color: #cd9f85 !important;
+    color: white !important;
+    font-weight: bold !important;
+    border-radius: 50% !important;
+    aspect-ratio: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: auto !important;
+    width: 90% !important;
+}

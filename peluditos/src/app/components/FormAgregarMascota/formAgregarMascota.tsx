@@ -4,11 +4,10 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UserContext } from '@/app/context/user.context';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { createMascota } from '@/app/services/client';
 import Swal from 'sweetalert2';
-
-
+import { getRazas } from '@/app/services/admin';
 
 const schema = yup.object().shape({
     nombreMascota: yup.string().required('El nombre de la mascota es requerido'),
@@ -59,11 +58,12 @@ export default function FormAgregarMascota(props: any) {
         resolver: yupResolver(schema) as any
     });
     const { userData } = useContext(UserContext);
-    const razas = ['Labrador', 'Bulldog', 'Beagle', 'Poodle', 'Chihuahua'];
+    const [razas, setRazas] = useState<string[]>([]);
 
 
     const cargarRazas = async () => {
-        // Lógica para cargar las razas desde una API o base de datos
+        const razas = await getRazas() || [];
+        setRazas(razas);
     }
 
     const onSubmit = async (data: FormData) => {
@@ -121,9 +121,9 @@ export default function FormAgregarMascota(props: any) {
                             onClick={cargarRazas}
                             defaultValue=""
                         >
-                            <option value="" disabled>Seleccione una raza</option>
-                            {razas.map((raza: string) => (
-                                <option key={raza} value={raza}>{raza}</option>
+                            <option key={0} value="" disabled>Seleccione una raza</option>
+                            {razas.map((raza: any) => (
+                                <option key={raza.id_raza} value={raza.raza}>{raza.raza}</option>
                             ))}
                         </select>
                     </div>
