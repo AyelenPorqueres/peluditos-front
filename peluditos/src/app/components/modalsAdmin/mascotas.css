@@ -1,0 +1,92 @@
+/* Ajustar el tamaño del modal */
+.modal-dialog {
+    max-width: 50%; /* Asegura que el modal ocupe el 50% del ancho de la pantalla */
+    height: 95vh; /* Establece la altura del modal al 95% de la pantalla */
+    max-height: 95vh; /* Limita la altura del modal al 95% de la altura de la pantalla */
+    overflow-y: auto; /* Permite scroll vertical si el contenido excede la altura */
+}
+
+/* Ajustar el contenido del modal */
+.modal-content {
+    margin-bottom: 0 !important; /* Elimina cualquier margen inferior */
+    padding-bottom: 0 !important; /* Elimina cualquier padding inferior */
+
+}
+
+/* Reducir el tamaño de la fuente */
+.modal-body {
+    font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+    margin-bottom: 0 !important; /* Elimina cualquier margen inferior */
+    padding-bottom: 0 !important; /* Elimina cualquier padding inferior */
+}
+
+/* Ajustar los inputs y labels */
+.modal-body .form-control,
+.modal-body label {
+    font-size: 0.85rem; /* Reduce el tamaño de los inputs y etiquetas */
+}
+
+/* Asegurarse de que no haya espacio reservado para el footer */
+.modal-footer {
+    display: none !important; /* Oculta el footer si Bootstrap lo está generando automáticamente */
+}
+
+/* Ajustar el botón */
+.button-agregarcliente {
+    font-size: 0.85rem; /* Reduce el tamaño del texto del botón */
+    padding: 0.5rem 1rem; /* Ajusta el padding del botón */
+}
+
+
+/* Ajustes para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .modal-dialog {
+        max-width: 100%; /* Ocupa todo el ancho en móviles */
+        /*height: 95vh; /* Ajusta la altura en móviles */
+     
+    }
+
+    .modal-body {
+        font-size: 0.8rem; /* Reduce aún más el tamaño de la fuente en móviles */
+    }
+
+    .button-agregarcliente {
+        font-size: 0.8rem; /* Ajusta el tamaño del botón en móviles */
+    }
+}
+
+/* Ajustar el tamaño del header del modal */
+.modal-header {
+    padding: 0.5rem 1rem; /* Reduce el padding del header */
+    font-size: 1rem; /* Ajusta el tamaño de la fuente */
+    /*background-color: #f2e0d5; /* Opcional: Cambia el color de fondo */
+    /*border-bottom: 1px solid #cd9f85; /* Opcional: Agrega un borde */
+}
+
+/* Ajustar el título del modal */
+.modal-title {
+    font-size: 1.2rem; /* Reduce el tamaño del título */
+    font-weight: bold; /* Mantiene el título destacado */
+}
+
+/* Ajustar el botón de cierre */
+.modal-header .btn-close {
+    font-size: 0.8rem; /* Reduce el tamaño del botón de cierre */
+    padding: 0.25rem; /* Ajusta el padding del botón */
+}
+
+/* Ajustes para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .modal-header {
+        font-size: 0.9rem; /* Reduce aún más el tamaño de la fuente en móviles */
+        padding: 0.4rem 0.8rem; /* Ajusta el padding en móviles */
+    }
+
+    .modal-title {
+        font-size: 1rem; /* Ajusta el tamaño del título en móviles */
+    }
+}
+
+.text-validation{    
+    color:red;
+}

@@ -3,17 +3,68 @@ import './clients.css';
 import { Modal } from 'react-bootstrap';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Swal from 'sweetalert2'
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { getRazas } from '@/app/services/admin';
 
 interface data {
-    id: number,
-    name: string;
-    lastname: string;
-    dni: number;
-    tel: number;
-    email: string;
+    id_mascota: number,
+    nombre: string;
+    edad: number;
+    raza: string;
+    castrado: boolean;
+    desparasitado: boolean;
+    sextuple: string;
+    antirrabica: string;
+    shampoo?: string;
+    observaciones?: string;
+    veterinario: string;
+    tel_veterinario: number;
+    direccion_veterinario?: string;
+    duenioDni: number;
+    duenioNombre: string;
+    duenioTelefono: number;
+    duenioEmail: string;
 }
+
+
+const schema = yup.object().shape({
+    //Datos de la mascota
+    id_mascota: yup.number().required(),
+    nombreMascota: yup.string().required('El nombre de la mascota es requerido'),
+    raza: yup.string().required('La raza es requerida'),
+    edad: yup.string()
+        .required('La edad es requerida')
+        .matches(/^\d+$/, 'La edad debe ser un número')
+        .test('positive', 'La edad debe ser positiva', value =>
+            value ? parseInt(value) > 0 : true
+        ),
+    castrado: yup.boolean().required('Debe indicar si está castrado'),
+    desparasitado: yup.boolean().required('Debe indicar si está desparasitado'),
+    antirrabica: yup.string().required('La fecha de la vacuna de rabia es requerida').matches(/^(0[1-9]|1[0-2])\/\d{4}$/, 'Formato inválido, use MM/AAAA').test('no-futura', 'La fecha no puede ser futura', (value) => {
+        if (!value) return true;
+        const [mes, anio] = value.split('/').map(Number);
+        const fecha = new Date(anio, mes - 1);
+        return fecha <= new Date();
+    }),
+    sextuple: yup.string().required('La fecha de la vacuna sextuple es requerida').matches(/^(0[1-9]|1[0-2])\/\d{4}$/, 'Formato inválido, use MM/AAAA').test('no-futura', 'La fecha no puede ser futura', (value) => {
+        if (!value) return true;
+        const [mes, anio] = value.split('/').map(Number);
+        const fecha = new Date(anio, mes - 1);
+        return fecha <= new Date();
+    }),
+    veterinario: yup.string().required('El nombre del veterinario es requerido'),
+    tel_veterinario: yup.string().required('El teléfono del veterinario es requerido').matches(/^\d+$/, 'El teléfono debe ser un número'),
+    direccion_veterinario: yup.string().optional(),
+    observaciones: yup.string().optional(),
+    shampoo: yup.string().optional(),
+    //Datos del dueño
+    duenioDni: yup.number().required("Por favor ingrese un DNI del dueño"),
+    duenioNombre: yup.string().required("Por favor ingrese un nombre del dueño"),
+    duenioTelefono: yup.number().required("Por favor ingrese un teléfono del dueño"),
+    duenioEmail: yup.string().email('Ingrese un email válido').required("Por favor ingrese un email del dueño"),
+});
 
 interface clientProps {
     show: boolean;
@@ -26,9 +77,17 @@ interface clientProps {
 export const AddClient: React.FC<clientProps> = ({ show, handleClose, data, action, updateData }) => {
 
     const [errorRegister, setErrorRegister] = useState('');
-    const { handleSubmit, register, reset, formState: { errors, isValid } } = useForm<data>({ mode: 'onChange' });
+    const { handleSubmit, register, reset, formState: { errors, isValid } } = useForm<data>({ mode: 'onChange', resolver: yupResolver(schema) as any });
+    const [razas, setRazas] = useState<string[]>([]);
+
+
+    const cargarRazas = async () => {
+        const razas = await getRazas() || [];
+        setRazas(razas);
+    }
+
     const onSubmit: SubmitHandler<data> = async (newData) => {
-        const user = {
+        /*const user = {
             id_user: data?.id,
             mail: newData.email,
             password: 'cliente1234',
@@ -37,7 +96,7 @@ export const AddClient: React.FC<clientProps> = ({ show, handleClose, data, acti
             dni: newData.dni,
             phone: newData.tel,
             role: 'client'
-        }
+        }*/
 
         if (action == 'Agregar') {
             const resp = 409;//await createUser(user);
@@ -55,7 +114,7 @@ export const AddClient: React.FC<clientProps> = ({ show, handleClose, data, acti
                 updateData();
             }
         } else if (action == 'Modificar') {
-            if (data.mail == newData.email && data.name == newData.name && data.lastname == newData.lastname && data.dni == newData.dni && data.phone == newData.tel) {
+            if (/*data.mail == newData.email && data.name == newData.name && data.lastname == newData.lastname && data.dni == newData.dni && data.phone == newData.tel*/1 == 1) {
                 setErrorRegister('Debe modificar algún dato.');
             } else {
                 setErrorRegister('');
@@ -78,6 +137,10 @@ export const AddClient: React.FC<clientProps> = ({ show, handleClose, data, acti
         }
     }
 
+    useEffect(() => {
+        cargarRazas();
+    }, []);
+
     return (
         <>
             <Modal show={show} onHide={handleClose}>
@@ -85,110 +148,136 @@ export const AddClient: React.FC<clientProps> = ({ show, handleClose, data, acti
                     <Modal.Title>{action} cliente</Modal.Title>
                 </Modal.Header>
                 <Modal.Body >
+                    <input defaultValue={data?.id} disabled hidden
+                        {...register('id_mascota')} />
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <input defaultValue={data?.id} disabled hidden
-                            {...register('id')} />
-                        <div>
-                            <label className='form-label-admin'>Nombre</label>
-                            <input className='form-input-admin'
-                                defaultValue={data?.name}
-                                placeholder='Ingrese su/s nombre/s'
-                                {...register("name", {
-                                    required: "Por favor ingrese un nombre",
-                                    minLength: {
-                                        value: 2,
-                                        message: "El nombre no puede contener menos de 2 caracteres",
+                        <div className="form-group mb-2">
+                            <label>Nombre de la mascota</label>
+                            <input
+                                type="text"
+                                defaultValue={data?.nombre}
+                                className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+                                {...register('nombre')}
+                            />
+                            {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+                        </div>
 
-                                    },
-                                    maxLength: {
-                                        value: 100,
-                                        message: "El nombre no puede contener más de 100 caracteres",
-                                    },
-                                    pattern: {
-                                        value: /^([a-zA-Z]+\s?)+$/,
-                                        message: "Nombre inválido",
-                                    }
-                                })} />
-                            <small className='text-validation-admin'>{errors.name?.message}</small>
-                        </div>
-                        <div>
-                            <label className='form-label-admin'>Apellido</label>
-                            <input className='form-input-admin'
-                                defaultValue={data?.lastname}
-                                placeholder='Ingrese su/s apellido/s'
-                                {...register("lastname", {
-                                    required: "Por favor ingrese un apellido",
-                                    minLength: {
-                                        value: 2,
-                                        message: "El apellido no puede contener menos de 2 caracteres",
+                        <div className='row mb-2'>
+                            <div className="col">
+                                <label>Raza (o parecido a:)</label>
+                                <select
+                                    className={`form-control ${errors.raza ? 'is-invalid' : ''}`}
+                                    {...register('raza')}
+                                    defaultValue={data?.raza || "Seleccione una raza"}
+                                >
+                                    <option key={0} value="" disabled>Seleccione una raza</option>
+                                    {razas.map((raza: any) => (
+                                        <option key={raza.id_raza} value={raza.raza}>{raza.raza}</option>
+                                    ))}
+                                </select>
+                            </div>
 
-                                    },
-                                    maxLength: {
-                                        value: 100,
-                                        message: "El apellido no puede contener más de 100 caracteres",
-                                    },
-                                    pattern: {
-                                        value: /^([a-zA-Z]+\s?)+$/,
-                                        message: "Apellido inválido",
-                                    }
-                                })} />
-                            <small className='text-validation-admin'>{errors.lastname?.message}</small>
+                            <div className="col">
+                                <label>Edad (años)</label>
+                                <input
+                                    type="number"
+                                    defaultValue={data?.edad}
+                                    className={`form-control ${errors.edad ? 'is-invalid' : ''}`}
+                                    {...register('edad')}
+                                />
+                                {errors.edad && <div className="invalid-feedback">{errors.edad.message}</div>}
+                            </div>
                         </div>
-                        <div>
-                            <label className='form-label-admin'>DNI</label>
-                            <input className='form-input-admin'
-                                defaultValue={data?.dni}
-                                placeholder='Ingrese su DNI'
-                                {...register("dni", {
-                                    required: "Por favor ingrese su DNI",
-                                    validate: (value: number) => {
-                                        if (value < 1000000 || value > 100000000) {
-                                            return "Debe ingresar un DNI válido";
-                                        }
-                                    },
-                                    pattern: {
-                                        value: /^(0|[1-9]\d*)(\.\d+)?$/,
-                                        message: "DNI inválido",
-                                    }
-                                })} />
-                            <small className='text-validation-admin'>{errors.dni?.message}</small>
-                        </div>
-                        <div>
-                            <label className='form-label-admin'>Teléfono celular</label>
-                            <input className='form-input-admin'
-                                defaultValue={data?.phone}
-                                placeholder='Ingrese su número de teléfono'
-                                {...register("tel", {
-                                    required: "Por favor ingrese su número de teléfono",
-                                    minLength: {
-                                        value: 10,
-                                        message: "El número de teléfono no puede tener menos de 10 caracteres",
+                        <div className='row mb-2'>
 
-                                    },
-                                    maxLength: {
-                                        value: 10,
-                                        message: "El número de teléfono no puede tener más de 10 caracteres",
-                                    },
-                                    pattern: {
-                                        value: /^(0|[1-9]\d*)(\.\d+)?$/,
-                                        message: "Número de teléfono inválido",
-                                    }
-                                })} />
-                            <small className='text-validation-admin'>{errors.tel?.message}</small>
+                            <div className=" col">
+                                <label className="form-check-label">Vacuna de la rabia</label>
+                                <input
+                                    type="text"
+                                    placeholder="MM/AAAA"
+                                    defaultValue={data?.antirrabica}
+                                    className={`form-control ${errors.antirrabica ? 'is-invalid' : ''}`}
+                                    {...register('antirrabica')}
+                                />
+                                {errors.antirrabica && <div className="text-danger">{errors.antirrabica.message}</div>}
+                            </div>
+                            <div className=" col">
+                                <label className="form-check-label">Vacuna sextuple</label>
+                                <input
+                                    type="text" placeholder="MM/AAAA"
+                                    defaultValue={data?.sextuple}
+                                    className={`form-control ${errors.sextuple ? 'is-invalid' : ''}`}
+                                    {...register('sextuple')}
+                                />
+                                {errors.sextuple && <div className="text-danger">{errors.sextuple.message}</div>}
+                            </div>
                         </div>
-                        <div>
-                            <label className='form-label-admin'>Email</label>
-                            <input className='form-input-admin'
-                                defaultValue={data?.mail}
-                                placeholder="Ingrese su email"
-                                {...register("email", {
-                                    required: 'Por favor ingrese su dirección de email',
-                                    pattern: {
-                                        value: /^(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){0,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){0,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}$/,
-                                        message: 'Dirección de email invalida'
-                                    },
-                                })} />
-                            <small className='text-validation-admin'>{errors.email?.message}</small>
+                        <div className='row mb-2 ms-1'>
+                            <div className="form-check col">
+                                <input
+                                    type="checkbox"
+                                    defaultChecked={data?.desparasitado}
+                                    className="form-check-input"
+                                    {...register('desparasitado')}
+                                />
+                                <label className="form-check-label">Desparasitado</label>
+                                {errors.desparasitado && <div className="text-danger">{errors.desparasitado.message}</div>}
+                            </div>
+
+                            <div className="form-check col">
+                                <input
+                                    type="checkbox"
+                                    defaultChecked={data?.castrado}
+                                    className="form-check-input"
+                                    {...register('castrado')}
+                                />
+                                <label className="form-check-label">Castrado</label>
+                                {errors.castrado && <div className="text-danger">{errors.castrado.message}</div>}
+                            </div>
+                        </div>
+                        <div className="form-group mb-2">
+                            <label>Veterinario</label>
+                            <input
+                                type="text"
+                                defaultValue={data?.veterinario}
+                                className={`form-control ${errors.veterinario ? 'is-invalid' : ''}`}
+                                {...register('veterinario')}
+                            />
+                            {errors.veterinario && <div className="invalid-feedback">{errors.veterinario.message}</div>}
+                        </div>
+
+                        <div className='row mb-2'>
+                            <div className="col">
+                                <label>Tel. Veterinario</label>
+                                <input
+                                    type="text"
+                                    defaultValue={data?.tel_veterinario}
+                                    className={`form-control ${errors.tel_veterinario ? 'is-invalid' : ''}`}
+                                    {...register('tel_veterinario')}
+                                />
+                                {errors.tel_veterinario && <div className="invalid-feedback">{errors.tel_veterinario.message}</div>}
+                            </div>
+                            <div className="col">
+                                <label>Dirección Veterinario</label>
+                                <input
+                                    type="text"
+                                    defaultValue={data?.direccion_veterinario}
+                                    className={`form-control ${errors.direccion_veterinario ? 'is-invalid' : ''}`}
+                                    {...register('direccion_veterinario')}
+                                />
+                                {errors.direccion_veterinario && <div className="invalid-feedback">{errors.direccion_veterinario.message}</div>}
+                            </div>
+                        </div>
+                        <div className="form-group mb-2">
+                            <label>Observaciones</label>
+                            <textarea
+                                defaultValue={data?.observaciones}
+                                className={`form-control ${errors.observaciones ? 'is-invalid' : ''}`}
+                                {...register('observaciones')}
+                                placeholder='Escribe aquí cualquier detalle adicional que consideres importante del comportamiento o salud de tu mascota (Miedos, fobias, alergias, cuidados especiales, etc.)'
+                                rows={3}
+                            />
+                            {errors.observaciones && <div className="invalid-feedback">{errors.observaciones.message}</div>}
                         </div>
                         <small className='text-validation-admin'>{errorRegister}</small>
                         <button type='submit' disabled={!isValid} className='button-agregarcliente'>{action} cliente</button>

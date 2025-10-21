@@ -34,7 +34,6 @@ export default function Calendario(props: any) {
             // Incrementar la fecha en 1 día
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        console.log('dias', dias);
         setDiasNoDisponibles(dias);
     }
 

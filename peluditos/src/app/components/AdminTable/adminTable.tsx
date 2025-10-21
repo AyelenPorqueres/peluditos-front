@@ -11,12 +11,13 @@ import { useState } from 'react'
 import './adminTable.css'
 import { AddClient } from '../modalsAdmin/clients';
 import { AddProfessional } from '../modalsAdmin/professional';
-import { AddServices } from '../modalsAdmin/services';
 import { AddAppoinments } from '../modalsAdmin/appointments';
 import Swal from 'sweetalert2';
+import { ModalMascota } from '../modalsAdmin/mascotas';
+import { Imascota } from '@/app/model/Imascota';
+import { ICliente } from '@/app/model/ICliente';
 //import { deleteClient, deleteProf } from '@/app/services/User';
 //import { deleteAppointment, deleteService } from '@/app/services/Services';
-
 
 interface tableProps {
   data: any[];
@@ -24,62 +25,30 @@ interface tableProps {
   filter: string;
   updateData: () => void;
 }
-
+ 
 export const AdminTable: React.FC<tableProps> = ({ data, columns, filter, updateData }) => {
+  const [showClient, setShowClient] = useState<boolean>(false);
+  const [showProfessional, setShowProfessional] = useState<boolean>(false);
+  const [showAppointments, setShowAppointments] = useState<boolean>(false);
+  const [showMascotas, setShowMascotas] = useState<boolean>(false);
+  const [showEditClient, setShowEditClient] = useState<boolean>(false);
+  const [showEditProfessional, setShowEditProfessional] = useState<boolean>(false);
+  const [action, setAction] = useState<string>('Modificar');
+  const [modalMascotaData, setModalMascotaData] = useState<Imascota  | undefined >(undefined);
 
-  const [showClient, setShowClient] = useState(false);
-  const [showProfessional, setShowProfessional] = useState(false);
-  const [showAppointments, setShowAppointments] = useState(false);
-  const [showServices, setShowServices] = useState(false);
-
-  const [showEditClient, setShowEditClient] = useState<number>();
-  const [showEditProfessional, setShowEditProfessional] = useState<number>();
-  const [showEditServices, setShowEditServices] = useState<number>();
-
-  const handleClose = () => {
+  //Mostrar modal correspondiente segun el filtro, la acccion y los datos (en caso de edición)
+  const handleShow = ( action: string, data?: Imascota ) => {
     switch (filter) {
       case "Clientes":
-        setShowClient(false)
+        setShowEditClient(true)
         break;
       case "Profesionales":
-        setShowProfessional(false)
+        setShowEditProfessional(true)
         break;
-      case "Turnos":
-        setShowAppointments(false)
-        break;
-      case "Servicios":
-        setShowServices(false)
-        break;
-    }
-  };
-
-  const handleShow = () => {
-    switch (filter) {
-      case "Clientes":
-        setShowClient(true)
-        break;
-      case "Profesionales":
-        setShowProfessional(true)
-        break;
-      case "Turnos":
-        setShowAppointments(true)
-        break;
-      case "Servicios":
-        setShowServices(true)
-        break;
-    }
-  };
-
-  const handleShowEdit = (id: any) => {
-    switch (filter) {
-      case "Clientes":
-        setShowEditClient(id)
-        break;
-      case "Profesionales":
-        setShowEditProfessional(id)
-        break;
-      case "Servicios":
-        setShowEditServices(id)
+      case "Mascotas":
+        setAction(action);
+        setModalMascotaData(action === "Modificar" || action === "Ver" ? data : undefined);
+        setShowMascotas(true);
         break;
     }
   };
@@ -173,19 +142,10 @@ export const AdminTable: React.FC<tableProps> = ({ data, columns, filter, update
           onChange={e => setFiltering(e.target.value)}
         />
 
-        <button onClick={handleShow} className='btn-style'>
+        <button onClick={() => handleShow( "Agregar")} className='btn-style'>
           Agregar {filter} +
         </button>
 
-        {/* Modales para agregar y editar segun el filtro */}
-        {filter == 'Clientes' && 
-          <AddClient show={showClient} handleClose={handleClose} action='Agregar' updateData={updateData} />}
-        {filter == 'Profesionales' && 
-          <AddProfessional show={showProfessional} handleClose={handleClose} action='Agregar' updateData={updateData} />}
-        {filter == 'Servicios' && 
-          <AddServices show={showServices} handleClose={handleClose} action='Agregar' updateData={updateData} />}
-        {filter == 'Turnos' && 
-          <AddAppoinments show={showAppointments} handleClose={handleClose} action='Agregar' updateData={updateData} />}
       </div>
 
       <table className='table-admin-container'>
@@ -193,15 +153,20 @@ export const AdminTable: React.FC<tableProps> = ({ data, columns, filter, update
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th className='table-admin-th' key={header.id}
+                //Columnas de la tabla
+                <th
+                  className='table-admin-th'
+                  key={header.id}
                   onClick={header.column.getToggleSortingHandler()}
                 >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                  {
-                    { 'asc': <i className="bi bi-sort-down-alt icon-down" />, 'desc': <i className="bi bi-sort-up icon-up" /> }[header.column.getIsSorted() as string] ?? <i className="bi bi-arrow-down-up icon-double-arrow" />
+                  {/* Encabezado de columna */}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {/* Iconos de ordenamiento */}
+                  {{
+                    'asc': <i className="bi bi-sort-down-alt icon-down" />,
+                    'desc': <i className="bi bi-sort-up icon-up" />
+                  }
+                  [header.column.getIsSorted() as string] ?? <i className="bi bi-arrow-down-up icon-double-arrow" />
                   }
                 </th>
               ))}
@@ -218,22 +183,33 @@ export const AdminTable: React.FC<tableProps> = ({ data, columns, filter, update
                 </td>
               ))}
               <td className='table-admin-td'>
+                <i onClick={() => handleShow("Ver", row.original)} className='bi bi-eye icon' />
                 {filter !== 'Turnos' &&
-                  <i onClick={() => handleShowEdit(row.original.id)} className='bi bi-pencil icon-pencil' />
+                  <i onClick={() => handleShow("Modificar", row.original)} className='bi bi-pencil icon' />
                 }
-                {filter == 'Clientes' && <AddClient data={row.original} show={row.original.id == showEditClient} handleClose={() => setShowEditClient(0)} action='Modificar' updateData={updateData} />}
+                {/*filter == 'Clientes' && <AddClient data={row.original} show={row.original.id == showEditClient} handleClose={() => setShowEditClient(0)} action='Modificar' updateData={updateData} />}
                 {filter == 'Profesionales' && <AddProfessional data={row.original} show={row.original.id == showEditProfessional} handleClose={() => setShowEditProfessional(0)} action='Modificar' updateData={updateData} />}
                 {filter == 'Servicios' && <AddServices data={row.original} show={row.original.id == showEditServices} handleClose={() => setShowEditServices(0)} action='Modificar' updateData={updateData} />}
-                <i className='bi bi-trash3 icon-trash' onClick={() => deleteRow(row.original.id)} />
+                <i className='bi bi-trash3 icon-trash' onClick={() => deleteRow(row.original.id)} />*/}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Paginacion */}
       <i onClick={() => table.setPageIndex(0)} className="bi bi-chevron-double-left"></i>
       <i onClick={() => table.previousPage()} className="bi bi-chevron-left"></i>
       <i onClick={() => table.nextPage()} className="bi bi-chevron-right"></i>
       <i onClick={() => table.setPageIndex(table.getPageCount() - 1)} className="bi bi-chevron-double-right"></i>
+      {filter == 'Mascotas' &&
+        <ModalMascota
+          key={`${modalMascotaData ? modalMascotaData.id_mascota : ''}-${action}`}
+          data={modalMascotaData}
+          show={showMascotas}
+          handleClose={() => setShowMascotas(false)}
+          action={action}
+          updateData={updateData}
+        />}
     </div>
   );
 }

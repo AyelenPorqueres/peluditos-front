@@ -11,6 +11,15 @@ export const getRazas = async (): Promise<any> => {
     }
 }
 
+export const getPeluqueras = async (): Promise<any> => {
+    try {
+        const response: AxiosResponse<any, any> = await clientAxios.get('admin/peluqueras');
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getTurnosDisponibles = async ({day}: {day: string}): Promise<any> => {
     try {        
         const response: AxiosResponse<any, any> = await clientAxios.get('turnos/turnosDisponibles',{params: {day}});

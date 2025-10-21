@@ -2,27 +2,10 @@
 import { useContext, useState } from 'react';
 import { TurnoContext } from '@/app/context/turno.context';
 import './agregarMascota.css'
-import { Form, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 import FormAgregarMascota from '../FormAgregarMascota/formAgregarMascota';
-
-
-
-const schema = yup.object().shape({
-    nombre: yup.string().required('El nombre es requerido'),
-    raza: yup.string().required('La raza es requerida'),
-    edad: yup.number().required('La edad es requerida').positive('La edad debe ser positiva'),
-    peso: yup.number().required('El peso es requerido').positive('El peso debe ser positivo'),
-    vacunasAlDia: yup.boolean().required('Debe indicar si las vacunas están al día'),
-    desparasitado: yup.boolean().required('Debe indicar si está desparasitado'),
-    observaciones: yup.string(),
-});
-
-type FormData = yup.InferType<typeof schema>;
 
 export default function AgregarMascota(props: any) {
     const { handleClose, show }: { setMostrarMascotas: Function, handleClose: Function, show: boolean } = props;
